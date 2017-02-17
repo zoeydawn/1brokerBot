@@ -12,33 +12,35 @@ const {
 const stopLossPercentage = 5;
 const takeProfitPercentage = 25;
 const leverage = 200;
+const direction = 'long';
+
 const orderOptions = {
   symbol: 'USDJPY',
   margin: 0.01,
-  direction: 'short',
+  direction,
   leverage,
   type: 'market',
 };
 
-function placeNewOrder(options) {
-  placeOrder(options, (err, data) => {
-    if(err) {
-      console.log('ERROR:', err);
-      return;
-    }
-    return console.log(data);
-  });
-};
+// function placeNewOrder(options) {
+//   placeOrder(options, (err, data) => {
+//     if(err) {
+//       console.log('ERROR:', err);
+//       return;
+//     }
+//     return console.log(data);
+//   });
+// };
 
-function edit(options) {
-  editPosition(options, (err, data) => {
-    if(err) {
-      console.log('ERROR:', err);
-      return;
-    }
-    return console.log(data);
-  });
-};
+// function edit(options) {
+//   editPosition(options, (err, data) => {
+//     if(err) {
+//       console.log('ERROR:', err);
+//       return;
+//     }
+//     return console.log(data);
+//   });
+// };
 
 // let tradesCreated = 0;
 function trade() {
@@ -71,13 +73,19 @@ function trade() {
         if (positions) {
           const { entry_price, position_id, stop_loss, take_profit } = data.response.positions_open[0];
           const entryPrice = parseFloat(entry_price);
-          newStopLoss = entryPrice + (entryPrice * (stopLossPercentage/leverage) / entryPrice);
-          newTakeProfit = entryPrice - (entryPrice * (takeProfitPercentage/leverage) / entryPrice);
+          let newStopLoss;
+          let newTakeProfit;
+          if (direction === 'long') {
+            newStopLoss = entryPrice - (entryPrice * (stopLossPercentage/leverage) / entryPrice);
+            newTakeProfit = entryPrice + (entryPrice * (takeProfitPercentage/leverage) / entryPrice);
+          } else {
+            let newStopLoss = entryPrice + (entryPrice * (stopLossPercentage/leverage) / entryPrice);
+            let newTakeProfit = entryPrice - (entryPrice * (takeProfitPercentage/leverage) / entryPrice);
+          }
           if (newTakeProfit != take_profit) {
             console.log('Setting new stop_loss and take_profit');
             console.log('entry_price:', entry_price);
             console.log('newStopLoss:', newStopLoss);
-            // console.log('stopLoss:', stopLoss);
             console.log('newTakeProfit:', newTakeProfit);
             const editOptions = {
               id: position_id,
@@ -102,7 +110,7 @@ function trade() {
   // console.log('tradesCreated:', tradesCreated);
   setTimeout(() => {
     trade();
-  }, 20000);
+  }, 30000);
 };
 
 trade();
