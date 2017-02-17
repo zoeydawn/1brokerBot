@@ -9,8 +9,8 @@ const {
   marketDetails,
 } = require('./models/trade');
 
-const stopLossPercentage = 5;
-const takeProfitPercentage = 25;
+const stopLossPercentage = 2.5;
+const takeProfitPercentage = 15;
 const leverage = 200;
 const direction = 'long';
 
@@ -79,8 +79,8 @@ function trade() {
             newStopLoss = entryPrice - (entryPrice * (stopLossPercentage/leverage) / entryPrice);
             newTakeProfit = entryPrice + (entryPrice * (takeProfitPercentage/leverage) / entryPrice);
           } else {
-            let newStopLoss = entryPrice + (entryPrice * (stopLossPercentage/leverage) / entryPrice);
-            let newTakeProfit = entryPrice - (entryPrice * (takeProfitPercentage/leverage) / entryPrice);
+            newStopLoss = entryPrice + (entryPrice * (stopLossPercentage/leverage) / entryPrice);
+            newTakeProfit = entryPrice - (entryPrice * (takeProfitPercentage/leverage) / entryPrice);
           }
           if (newTakeProfit != take_profit) {
             console.log('Setting new stop_loss and take_profit');

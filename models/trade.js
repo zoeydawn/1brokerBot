@@ -54,7 +54,7 @@ function cancelOrder(id, cb) {
 
 function editPosition(options, cb) {
   const { id, stopLoss, takeProfit } = options;
-  axios.get(`https://1broker.com/api/v2/position/edit.php?token=${process.env.API_TOKEN}&pretty=1&position_id=${id}&stop_loss=${stopLoss}&take_profit=${takeProfit}&trailing_stop_loss=true`)
+  axios.get(`https://1broker.com/api/v2/position/edit.php?token=${process.env.API_TOKEN}&pretty=1&position_id=${id}&stop_loss=${stopLoss}&take_profit=${takeProfit}&trailing_stop_loss=false`)
   .then((responce) => {
     return cb(null, responce.data);
   })
